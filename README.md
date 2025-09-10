@@ -1,6 +1,8 @@
 Simple nanopb project
 =====================
 
+This project uses nanopb: https://github.com/nanopb/nanopb
+
 Pre-requisists:
 
 - Python >= 3.7
