@@ -40,9 +40,8 @@ void *arena_realloc(void *__ptr, size_t __size)
 
 	if ((s_arena != NULL) && (s_size >= 0U)) {
 		if (__ptr != NULL) { // actual realloc
-			dbg("realloc %p", __ptr);
 			if (s_last != __ptr) {
-				dbg("can only extend the last memory region");
+				dbg("! realloc %p: can only extend the last memory %p region", __ptr, s_last);
 				return NULL;
 			}
 
@@ -52,29 +51,29 @@ void *arena_realloc(void *__ptr, size_t __size)
 				s_size += diff;
 				s_arena -= diff;
 				if (s_last_size == 0U) {
-					dbg("free last memory %p (free %zu bytes)", __ptr, diff);
+					dbg("> free last memory %p (free %zu bytes)", __ptr, diff);
 					s_last = NULL; // basically ~ free()
 				} else {
-					dbg("shrink last memory %p by %zu bytes", __ptr, diff);
+					dbg("> shrink last memory %p by %zu bytes", __ptr, diff);
 				}
 			} else if (s_last_size < __size) { // expand
 				size_t diff = __size - s_last_size;
 				if (diff > s_size) {
-					dbg("expand failed -> oom");
+					dbg("! expand last memory %p failed -> oom (free=%zu)", __ptr, s_size);
 					return NULL;
 				}
 
 				s_last_size += diff;
 				s_size -= diff;
 				s_arena += diff;
-				dbg("expand last memory %p by %zu bytes (free=%zu)", __ptr, diff, s_size);
+				dbg("> expand last memory %p by %zu bytes (free=%zu)", __ptr, diff, s_size);
 			}
 
 			return s_last;
 		} else { // malloc
 			assert((__ptr == NULL) && "__ptr must be NULL here");
 			if (__size > s_size) {
-				dbg("malloc: oom");
+				dbg("! malloc: oom (free=%zu)", s_size);
 				return NULL;
 			}
 
@@ -83,7 +82,7 @@ void *arena_realloc(void *__ptr, size_t __size)
 			s_last_size = __size;
 			s_last = s_arena;
 
-			dbg("malloc (free=%zu)", s_size);
+			dbg("> malloc succeeded (free=%zu)", s_size);
 
 			return s_last;
 		}
