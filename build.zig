@@ -2,6 +2,11 @@ const std = @import("std");
 
 const CFlags = &.{
     "-D PB_SYSTEM_HEADER=\"my_system.h\"",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-Wno-gnu-zero-variadic-macro-arguments", // allow this one extension
 };
 
 // Although this function looks imperative, note that its job is to

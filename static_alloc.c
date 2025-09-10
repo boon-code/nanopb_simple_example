@@ -67,7 +67,7 @@ void *arena_realloc(void *__ptr, size_t __size)
 				s_last_size += diff;
 				s_size -= diff;
 				s_arena += diff;
-				dbg("expand last memory %p by %zu bytes", __ptr, diff);
+				dbg("expand last memory %p by %zu bytes (free=%zu)", __ptr, diff, s_size);
 			}
 
 			return s_last;

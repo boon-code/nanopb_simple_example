@@ -4,9 +4,9 @@
 #include "simple.pb.h"
 #include "static_alloc.h"
 
-static const int32_t s_numbers[] = { 13, 42, 39 };
+static int32_t s_numbers[] = { 13, 42, 39 };
 
-int main()
+int main(void)
 {
     /* This is the buffer where we will store our message. */
     uint8_t buffer[128];
@@ -28,7 +28,7 @@ int main()
         pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
         
         /* Fill in the lucky number */
-        message.lucky_number = &s_numbers;
+        message.lucky_number = &s_numbers[0];
         message.lucky_number_count = sizeof(s_numbers) / sizeof(s_numbers[0]);
         
         /* Now we are ready to encode the message! */
@@ -71,7 +71,7 @@ int main()
         }
         
         /* Print the data contained in the message. */
-        printf("Your %zu lucky number(s) were:\n", message.lucky_number_count);
+        printf("Your %u lucky number(s) were:\n", (unsigned int)message.lucky_number_count);
         for (size_t i = 0U; i < message.lucky_number_count; ++i) {
           printf("- %d\n", (unsigned int)message.lucky_number[i]);
         }
