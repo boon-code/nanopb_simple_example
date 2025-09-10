@@ -11,7 +11,8 @@
 
 /* Struct definitions */
 typedef struct _SimpleMessage {
-    int32_t lucky_number;
+    pb_size_t lucky_number_count;
+    int32_t *lucky_number;
 } SimpleMessage;
 
 
@@ -20,15 +21,15 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define SimpleMessage_init_default               {0}
-#define SimpleMessage_init_zero                  {0}
+#define SimpleMessage_init_default               {0, NULL}
+#define SimpleMessage_init_zero                  {0, NULL}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define SimpleMessage_lucky_number_tag           1
 
 /* Struct field encoding specification for nanopb */
 #define SimpleMessage_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, INT32,    lucky_number,      1)
+X(a, POINTER,  REPEATED, INT32,    lucky_number,      1)
 #define SimpleMessage_CALLBACK NULL
 #define SimpleMessage_DEFAULT NULL
 
@@ -38,8 +39,7 @@ extern const pb_msgdesc_t SimpleMessage_msg;
 #define SimpleMessage_fields &SimpleMessage_msg
 
 /* Maximum encoded size of messages (where known) */
-#define SIMPLE_PB_H_MAX_SIZE                     SimpleMessage_size
-#define SimpleMessage_size                       11
+/* SimpleMessage_size depends on runtime parameters */
 
 #ifdef __cplusplus
 } /* extern "C" */

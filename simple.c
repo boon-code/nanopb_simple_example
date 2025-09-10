@@ -2,6 +2,9 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "simple.pb.h"
+#include "static_alloc.h"
+
+static const int32_t s_numbers[] = { 13, 42, 39 };
 
 int main()
 {
@@ -25,7 +28,8 @@ int main()
         pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
         
         /* Fill in the lucky number */
-        message.lucky_number = 13;
+        message.lucky_number = &s_numbers;
+        message.lucky_number_count = sizeof(s_numbers) / sizeof(s_numbers[0]);
         
         /* Now we are ready to encode the message! */
         status = pb_encode(&stream, SimpleMessage_fields, &message);
@@ -44,6 +48,10 @@ int main()
      */
 
     /* But because we are lazy, we will just decode it immediately. */
+
+    uint8_t arena_buffer[200];
+
+    arena_init(arena_buffer, sizeof(arena_buffer));
     
     {
         /* Allocate space for the decoded message. */
@@ -63,7 +71,10 @@ int main()
         }
         
         /* Print the data contained in the message. */
-        printf("Your lucky number was %d!\n", message.lucky_number);
+        printf("Your %zu lucky number(s) were:\n", message.lucky_number_count);
+        for (size_t i = 0U; i < message.lucky_number_count; ++i) {
+          printf("- %d\n", (unsigned int)message.lucky_number[i]);
+        }
     }
     
     return 0;

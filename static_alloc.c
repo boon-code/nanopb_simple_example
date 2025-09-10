@@ -83,6 +83,8 @@ void *arena_realloc(void *__ptr, size_t __size)
 			s_last_size = __size;
 			s_last = s_arena;
 
+			dbg("malloc (free=%zu)", s_size);
+
 			return s_last;
 		}
 	} else {
