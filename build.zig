@@ -1,6 +1,8 @@
 const std = @import("std");
 
-const CFlags = &.{};
+const CFlags = &.{
+    "-D PB_SYSTEM_HEADER=\"my_system.h\"",
+};
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
@@ -30,10 +32,14 @@ pub fn build(b: *std.Build) void {
         .files = &.{
             "simple.c",
             "simple.pb.c",
+            // nanopb
             "nanopb/pb_common.c",
             "nanopb/pb_decode.c",
             "nanopb/pb_encode.c",
+            // arena allocator
+            "static_alloc.c",
         },
+        .flags = CFlags,
     });
 
     exe.addIncludePath(.{ .path = "." });
