@@ -1,0 +1,3 @@
+[submodule "nanopb"]
+	path = nanopb
+	url = git@github.com:boon-code/nanopb_mirror.git
