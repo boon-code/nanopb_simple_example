@@ -1,6 +1,7 @@
 #!/bin/sh
 
 gcc \
+    "$@" \
     -D 'PB_SYSTEM_HEADER="my_system.h"' \
     -I nanopb/ -I . \
     simple.c \
