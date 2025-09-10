@@ -5,6 +5,7 @@
 #include "static_alloc.h"
 
 static int32_t s_numbers[] = { 13, 42, 39 };
+static uint8_t arena_buffer[(4U*3U) - 1U];
 
 int main(void)
 {
@@ -12,6 +13,8 @@ int main(void)
     uint8_t buffer[128];
     size_t message_length;
     bool status;
+
+    arena_init(arena_buffer, sizeof(arena_buffer));
     
     /* Encode our message */
     {
@@ -49,10 +52,6 @@ int main(void)
 
     /* But because we are lazy, we will just decode it immediately. */
 
-    uint8_t arena_buffer[200];
-
-    arena_init(arena_buffer, sizeof(arena_buffer));
-    
     {
         /* Allocate space for the decoded message. */
         SimpleMessage message = SimpleMessage_init_zero;
